@@ -1,0 +1,41 @@
+.blockContact {
+    min-height: 300px;
+    background-color: #fcff7f;
+    display: flex;
+    align-items: center;
+}
+
+.contacts {
+    border: 1px solid black;
+    flex-direction: column;
+    background-color: #fcff7f;
+
+}
+
+.formStyle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 300px;
+    width: 100%;
+}
+
+.input, .textarea{
+    display: flex;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+.input input {
+    width: 100%;
+}
+.textarea textarea {
+    width: 100%;
+}
+.buttonContact {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    padding: 4px 16px;
+    max-width: 20%;
+}

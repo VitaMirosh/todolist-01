@@ -1,0 +1,44 @@
+.projectBlock{
+    background-color: #a79aff;
+}
+.projectContainer{
+    flex-direction: column;
+    padding-bottom: 50px;
+}
+.project{
+    border: 1px solid;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+
+}
+.project1{
+    border: 1px solid black;
+    width: 250px;
+    background-color: #a79aff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+@media all and (max-width:767px) {
+    .project {
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+
+    .project1 {
+        margin-bottom: 10px;
+    }
+    .project1:last-child{
+        margin-bottom: 0;
+    }
+}
+

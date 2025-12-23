@@ -1,0 +1,29 @@
+/*body{*/
+/*    background-color: greenyellow;*/
+/*}*/
+/* h1{*/
+/* color: blueviolet;*/
+/*}*/
+/* ul{*/
+/*     background-color: aquamarine;*/
+/* }*/
+/* li{*/
+/*     color: blueviolet;*/
+/* }*/
+/*input[type="checkbox"]:checked + span {*/
+/*    color: grey;*/
+/*}*/
+
+/*input[type="checkbox"]:hover {*/
+/*    accent-color: orange;     !* цвет при наведении *!*/
+/*}*/
+
+
+/* li:hover{*/
+/*     color: red;*/
+/* }*/
+/*input[type="checkbox"] {*/
+/*    width: 20px;*/
+/*    height: 20px;*/
+/*    accent-color: grey; !* меняет цвет галочки и фона (новый CSS) *!*/
+/*}*/
