@@ -56,6 +56,7 @@ const changeFilter = (filter: FilterValueTitle) => {
                     changeFilter={changeFilter}
                     createTask={createTask}
                     changeTaskStatus={changeTaskStatus}
+                    filter={filter}
 
 
       />
