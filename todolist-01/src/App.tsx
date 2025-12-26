@@ -42,6 +42,12 @@ const changeFilter = (filter: FilterValueTitle) => {
    setTasks(newTasks)
  }
 
+  const changeTaskStatus = (taskID:string, isDone:boolean) =>{
+    const taskChecked = tasks.map(t=>t.id === taskID ? {...t, isDone: isDone}: t)
+    setTasks(taskChecked)
+
+
+  }
   return (
     <>
       <TodolistItem title="What to learn"
@@ -49,6 +55,7 @@ const changeFilter = (filter: FilterValueTitle) => {
                     deleteTask={deleteTask}
                     changeFilter={changeFilter}
                     createTask={createTask}
+                    changeTaskStatus={changeTaskStatus}
 
 
       />
