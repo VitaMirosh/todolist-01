@@ -10,12 +10,12 @@ type Props = {
   changeFilter: (todolistId: string, filter: FilterValueTitle) => void
   createTask: (todolistId: string, title: string) => void;
   changeTaskStatus: (todolistId: string, taskId: string, isDone: boolean) => void;
-
-
+  deleteTodolist:(todolistId: string)=>void;
 }
 
 
-export const TodolistItem = ({todolist, tasks, deleteTask, changeFilter, createTask, changeTaskStatus}: Props) => {
+
+export const TodolistItem = ({todolist, tasks, deleteTask, changeFilter, createTask, changeTaskStatus,deleteTodolist}: Props) => {
   const [taskTitle, setTaskTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -43,9 +43,16 @@ export const TodolistItem = ({todolist, tasks, deleteTask, changeFilter, createT
   const changeFilterHandler = (filter: FilterValueTitle) => {
     changeFilter(todolist.id, filter)
   }
+  const deleteTodolistHandler=()=>{
+   deleteTodolist(todolist.id)
+  }
   return (
     <div>
-      <h3>{todolist.title}</h3>
+      <div className={'container'}>
+        <h3>{todolist.title}</h3>
+        <Button title={'x'} onClick={deleteTodolistHandler} />
+      </div>
+
       <input value={taskTitle}
              onChange={changeTaskHandler}
              onKeyDown={createTaskOnEnterHandler}

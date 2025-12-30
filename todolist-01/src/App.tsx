@@ -13,6 +13,9 @@ export type Todolist = {
   title: string
   filter: FilterValueTitle
 }
+export type TasksState = {
+  [key: string]: Task[]
+}
 export type FilterValueTitle = 'all' | 'active' | 'completed';
 
 function App() {
@@ -25,7 +28,7 @@ function App() {
     {id: todolistId1, title: 'What to learn', filter: 'all'},
     {id: todolistId2, title: 'What to buy', filter: 'all'}
   ]);
-  const [tasks, setTasks] = useState({
+  const [tasks, setTasks] = useState<TasksState>({
       [todolistId1]: [
         {id: v1(), title: 'HTML&CSS', isDone: true},
         {id: v1(), title: 'JS', isDone: true},
@@ -64,8 +67,11 @@ function App() {
       [todolistId]: tasks[todolistId].map(t => t.id === taskID ? {...t, isDone: isDone} : t)
     }
     setTasks(taskChecked)
-
-
+  }
+  const deleteTodolist = (todolistId: string) => {
+    setTodolists(todolists.filter(todolist => todolist.id !== todolistId))
+    delete tasks[todolistId]
+    setTasks({ ...tasks })
   }
 
   return (
@@ -86,6 +92,7 @@ function App() {
                                changeFilter={changeFilter}
                                createTask={createTask}
                                changeTaskStatus={changeTaskStatus}
+                               deleteTodolist={deleteTodolist}
           />
         }
       )}
