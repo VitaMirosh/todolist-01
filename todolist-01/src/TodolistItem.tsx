@@ -1,21 +1,21 @@
-import {FilterValueTitle, Task} from './App.tsx';
+import {FilterValueTitle, Task, Todolist} from './App.tsx';
 import {Button} from './Button.tsx';
 import {ChangeEvent, KeyboardEvent, useState} from 'react';
 
 
-type Props = {
-  title: string
+type Props ={
+  todolist:Todolist
   tasks: Task[]
   deleteTask: (taskId: string) => void
-  changeFilter: (filter: FilterValueTitle) => void
+  changeFilter: ( todolistId:string, filter: FilterValueTitle) => void
   createTask: (title: string) => void;
   changeTaskStatus: (taskId: string, isDone: boolean) => void;
-  filter?: FilterValueTitle;
+
 
 }
 
 
-export const TodolistItem = ({title, tasks, deleteTask, changeFilter, createTask, changeTaskStatus, filter}: Props) => {
+export const TodolistItem = ({todolist,tasks, deleteTask, changeFilter, createTask, changeTaskStatus}: Props) => {
   const [taskTitle, setTaskTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -41,10 +41,12 @@ export const TodolistItem = ({title, tasks, deleteTask, changeFilter, createTask
     }
   }
 
-
+const changeFilterHandler = ( filter: FilterValueTitle) => {
+    changeFilter(todolist.id,filter)
+}
   return (
     <div>
-      <h3>{title}</h3>
+      <h3>{todolist.title}</h3>
       <input value={taskTitle}
              onChange={changeTaskHandler}
              onKeyDown={createTaskOnEnterHandler}
@@ -74,11 +76,11 @@ export const TodolistItem = ({title, tasks, deleteTask, changeFilter, createTask
         </ul>}
 
 
-      <Button className={filter === 'all' ? 'active-filter' : ''} title={'All'} onClick={() => changeFilter('all')}/>
-      <Button className={filter === 'active' ? 'active-filter' : ''} title={'Active'}
-              onClick={() => changeFilter('active')}/>
-      <Button className={filter === 'completed' ? 'active-filter' : ''} title={'Completed'}
-              onClick={() => changeFilter('completed')}/>
+      <Button className={todolist.filter === 'all' ? 'active-filter' : ''} title={'All'} onClick={() => changeFilterHandler('all')}/>
+      <Button className={todolist.filter === 'active' ? 'active-filter' : ''} title={'Active'}
+              onClick={() => changeFilterHandler('active')}/>
+      <Button className={todolist.filter === 'completed' ? 'active-filter' : ''} title={'Completed'}
+              onClick={() => changeFilterHandler('completed')}/>
 
     </div>
   );
