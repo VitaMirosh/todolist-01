@@ -2,6 +2,7 @@ import './App.css'
 import {TodolistItem} from './TodolistItem.tsx';
 import {useState} from 'react';
 import {v1} from 'uuid';
+import {CreateItemForm} from './CreateItemForm.tsx';
 
 export type Task = {
   id: string
@@ -55,10 +56,10 @@ function App() {
     setTodolists(todolists.map(t => t.id === todolistID ? {...t, filter} : t));
   }
 
-  const createTask = (todolistId: string, title: string) => {
-    const newTask = {id: v1(), title: title, isDone: false}
-    const newTasks = {...tasks, [todolistId]: [newTask, ...tasks[todolistId]]}
-    setTasks(newTasks)
+  const createItem = (todolistId: string, title: string) => {
+    const newItem = {id: v1(), title: title, isDone: false}
+    const newItems = {...tasks, [todolistId]: [newItem, ...tasks[todolistId]]}
+    setTasks(newItems)
   }
 
   const changeTaskStatus = (todolistId: string, taskID: string, isDone: boolean) => {
@@ -71,11 +72,19 @@ function App() {
   const deleteTodolist = (todolistId: string) => {
     setTodolists(todolists.filter(todolist => todolist.id !== todolistId))
     delete tasks[todolistId]
-    setTasks({ ...tasks })
+    setTasks({...tasks})
+  }
+  const createTodolist = (title: string) => {
+    const todolistId =  v1()
+    const newTodolist: Todolist = {id: todolistId, title, filter: 'all'}
+    setTodolists(prev=>[...prev, newTodolist])
+    setTasks(prev=>({...prev,[todolistId]:[]}))
+
   }
 
   return (
-    <div>
+    <div className="app">
+      <CreateItemForm createItem={createTodolist}/>
       {todolists.map(todolist => {
           const todolistTasks = tasks[todolist.id]
           let filteredTasks = todolistTasks
@@ -90,7 +99,7 @@ function App() {
                                tasks={filteredTasks}
                                deleteTask={deleteTask}
                                changeFilter={changeFilter}
-                               createTask={createTask}
+                               createItem={createItem}
                                changeTaskStatus={changeTaskStatus}
                                deleteTodolist={deleteTodolist}
           />
