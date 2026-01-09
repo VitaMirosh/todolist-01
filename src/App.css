@@ -16,7 +16,12 @@
 .active-filter {
   background-color: lightgreen;
 }
+.non-done{
+  display: flex;
+}
+
 .is-done {
+  display: flex;
   opacity: 0.5;
 }
 .container {
