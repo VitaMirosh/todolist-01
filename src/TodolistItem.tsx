@@ -5,6 +5,7 @@ import {EditableSpan} from './EditableSpan.tsx';
 import {Box, Checkbox, IconButton, List, ListItem} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button'
+import {containerSx, getListItemSx} from './TodolistItem.styles.ts';
 
 
 type Props = {
@@ -71,7 +72,7 @@ export const TodolistItem = ({
 
             return (
               <ListItem key={task.id}
-                        sx={{p: 0, justifyContent: 'space-between', opacity: task.isDone ? 0.5 : 1}}>
+                        sx={getListItemSx(task.isDone)}>
                 <div>
                   <Checkbox checked={task.isDone} onChange={changeTaskStatusHandler}/>
                   <EditableSpan value={task.title} onChange={changeTaskTitleHandler}/>
@@ -84,7 +85,7 @@ export const TodolistItem = ({
           })}
         </List>}
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box sx={containerSx}>
       <Button variant={todolist.filter === 'all' ? 'outlined' : 'text'}
               color={'inherit'}
               onClick={() => changeFilterHandler('all')}>

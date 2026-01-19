@@ -3,9 +3,23 @@ import {TodolistItem} from './TodolistItem.tsx';
 import {useState} from 'react';
 import {v1} from 'uuid';
 import {CreateItemForm} from './CreateItemForm.tsx';
-import {AppBar, Container, Grid, IconButton, Paper, Toolbar} from '@mui/material';
-import Button from '@mui/material/Button';
+import {
+  AppBar,
+  Container,
+  createTheme,
+  CssBaseline,
+  Grid,
+  IconButton,
+  Paper, Switch,
+  ThemeProvider,
+  Toolbar
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu'
+import {NavButton} from './NavButton.ts';
+
+
+type ThemeMode = 'dark' | 'light'
+
 
 export type Task = {
   id: string
@@ -47,6 +61,19 @@ function App() {
       ],
     }
   )
+
+  const [themeMode, setThemeMode] = useState<ThemeMode>('light')
+  const theme = createTheme({
+    palette: {
+      mode: themeMode,
+      primary: {
+        main: '#087EA4',
+      },
+    },
+  })
+  const changeMode = () => {
+    setThemeMode(themeMode === 'light' ? 'dark' : 'light')
+  }
 
 
   const deleteTask = (todolistId: string, taskId: string) => {
@@ -96,14 +123,21 @@ function App() {
   }
 
   return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
     <div className="app">
       <AppBar position="static" sx={{mb:'30px'}}>
-        <Toolbar>
-          <Container maxWidth={'lg'}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Container maxWidth={'lg'} sx={{display: 'flex', flexDirection: 'row',justifyContent: 'space-between'}}>
             <IconButton color="inherit">
               <MenuIcon/>
             </IconButton>
-            <Button color="inherit">Sign in</Button>
+            <div>
+              <NavButton color="inherit">Sign in</NavButton>
+              <NavButton color="inherit">Sign up</NavButton>
+              <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
+              <Switch color={'default'} onChange={changeMode}></Switch>
+            </div>
           </Container>
         </Toolbar>
       </AppBar>
@@ -143,7 +177,7 @@ function App() {
         </Grid>
       </Container>
     </div>
-
+    </ThemeProvider>
   )
 }
 
