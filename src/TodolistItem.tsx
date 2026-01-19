@@ -2,7 +2,7 @@ import {FilterValueTitle, Task, Todolist} from './App.tsx';
 import {ChangeEvent} from 'react';
 import {CreateItemForm} from './CreateItemForm.tsx';
 import {EditableSpan} from './EditableSpan.tsx';
-import {IconButton} from '@mui/material';
+import {Checkbox, IconButton, List, ListItem} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button'
 
@@ -57,7 +57,7 @@ export const TodolistItem = ({
 
       <CreateItemForm createItem={createItemHandler}/>
       {tasks.length === 0 ? (<p>"Тасок нет"</p>) :
-        <ul>
+        <List>
           {tasks.map(task => {
             const deleteTaskHandler = () => {
               deleteTask(todolist.id, task.id)
@@ -70,16 +70,16 @@ export const TodolistItem = ({
             }
 
             return (
-              <li key={task.id} className={task.isDone ? 'is-done' : ''}>
-                <input type="checkbox" checked={task.isDone} onChange={changeTaskStatusHandler}/>
+              <ListItem key={task.id} className={task.isDone ? 'is-done' : ''}>
+                <Checkbox checked={task.isDone} onChange={changeTaskStatusHandler} />
                 <EditableSpan value={task.title} onChange={changeTaskTitleHandler}/>
                 <IconButton onClick={deleteTaskHandler}>
                   <DeleteIcon/>
                 </IconButton>
-              </li>
+              </ListItem>
             )
           })}
-        </ul>}
+        </List>}
 
 
       <Button variant={todolist.filter === 'all' ? 'outlined' : 'text'}
