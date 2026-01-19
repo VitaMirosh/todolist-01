@@ -3,6 +3,8 @@ import {Button} from './Button.tsx';
 import {ChangeEvent} from 'react';
 import {CreateItemForm} from './CreateItemForm.tsx';
 import {EditableSpan} from './EditableSpan.tsx';
+import {IconButton} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete'
 
 
 type Props = {
@@ -48,7 +50,9 @@ export const TodolistItem = ({
     <div>
       <div className={'container'}>
         <h3><EditableSpan value={todolist.title} onChange={changeTodolistHandler}/></h3>
-        <Button title={'x'} onClick={deleteTodolistHandler}/>
+        <IconButton onClick={deleteTodolistHandler}>
+          <DeleteIcon />
+        </IconButton>
       </div>
 
       <CreateItemForm createItem={createItemHandler}/>
@@ -66,10 +70,12 @@ export const TodolistItem = ({
             }
 
             return (
-              <li key={task.id} className={task.isDone ? 'is-done' : 'non-done'}>
-                <Button title={'x'} onClick={deleteTaskHandler}/>
+              <li key={task.id} className={task.isDone ? 'is-done' : ''}>
                 <input type="checkbox" checked={task.isDone} onChange={changeTaskStatusHandler}/>
                 <EditableSpan value={task.title} onChange={changeTaskTitleHandler}/>
+                <IconButton onClick={deleteTaskHandler}>
+                  <DeleteIcon />
+                </IconButton>
               </li>
             )
           })}
