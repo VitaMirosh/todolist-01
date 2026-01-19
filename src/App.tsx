@@ -3,6 +3,9 @@ import {TodolistItem} from './TodolistItem.tsx';
 import {useState} from 'react';
 import {v1} from 'uuid';
 import {CreateItemForm} from './CreateItemForm.tsx';
+import {AppBar, Container, Grid, IconButton, Toolbar} from '@mui/material';
+import Button from '@mui/material/Button';
+import MenuIcon from '@mui/icons-material/Menu'
 
 export type Task = {
   id: string
@@ -94,30 +97,47 @@ function App() {
 
   return (
     <div className="app">
-      <CreateItemForm createItem={createTodolist}/>
-      {todolists.map(todolist => {
-          const todolistTasks = tasks[todolist.id]
-          let filteredTasks = todolistTasks
-          if (todolist.filter === 'active') {
-            filteredTasks = todolistTasks.filter(task => !task.isDone)
-          }
-          if (todolist.filter === 'completed') {
-            filteredTasks = todolistTasks.filter(task => task.isDone)
-          }
-          return <TodolistItem key={todolist.id}
-                               todolist={todolist}
-                               tasks={filteredTasks}
-                               deleteTask={deleteTask}
-                               changeFilter={changeFilter}
-                               createItem={createItem}
-                               changeTaskStatus={changeTaskStatus}
-                               deleteTodolist={deleteTodolist}
-                               changeTaskTitle={changeTaskTitle}
-                               changeTodolistTitle={changeTodolistTitle}
-          />
-        }
-      )}
+      <AppBar position="static">
+        <Toolbar>
+          <Container maxWidth={'lg'}>
+            <IconButton color="inherit">
+              <MenuIcon/>
+            </IconButton>
+            <Button color="inherit">Sign in</Button>
+          </Container>
+        </Toolbar>
+      </AppBar>
+      <Container maxWidth={'lg'}>
+        <Grid container>
+          <CreateItemForm createItem={createTodolist}/>
+        </Grid>
 
+
+        <Grid container spacing={4}>
+          {todolists.map(todolist => {
+              const todolistTasks = tasks[todolist.id]
+              let filteredTasks = todolistTasks
+              if (todolist.filter === 'active') {
+                filteredTasks = todolistTasks.filter(task => !task.isDone)
+              }
+              if (todolist.filter === 'completed') {
+                filteredTasks = todolistTasks.filter(task => task.isDone)
+              }
+              return <TodolistItem key={todolist.id}
+                                   todolist={todolist}
+                                   tasks={filteredTasks}
+                                   deleteTask={deleteTask}
+                                   changeFilter={changeFilter}
+                                   createItem={createItem}
+                                   changeTaskStatus={changeTaskStatus}
+                                   deleteTodolist={deleteTodolist}
+                                   changeTaskTitle={changeTaskTitle}
+                                   changeTodolistTitle={changeTodolistTitle}
+              />
+            }
+          )}
+        </Grid>
+      </Container>
     </div>
 
   )
