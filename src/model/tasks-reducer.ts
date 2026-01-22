@@ -25,6 +25,14 @@ export const tasksReducer = (state: TasksState = initialState, action: Actions):
       const newItems = {...state, [action.payload.id]: [newItem, ...state[action.payload.id]]}
       return newItems
     }
+    case 'change_task_status':{
+      const taskChecked = {
+        ...state,
+        [action.payload.id]: state[action.payload.id].map(t => t.id === action.payload.taskID ? {...t, isDone:action.payload.isDone} : t)
+      }
+      return taskChecked
+    }
+
     default:
       return state
   }
@@ -43,9 +51,22 @@ export const createTaskAC = (payload: { id: string, title: string }) => {
     payload
   } as const
 }
+export const changeTaskStatusAC = (payload: { id: string, taskID: string, isDone: boolean }) => {
+  return {
+    type: 'change_task_status',
+    payload
+  } as const
+}
+
 
 type DeleteTaskAction = ReturnType<typeof deleteTaskAC>
 type CreateTaskAction = ReturnType<typeof createTaskAC>
+type ChangeTaskStatusAction = ReturnType<typeof changeTaskStatusAC>
 
-type Actions = CreateTodolistAction | DeleteTodolistAction | DeleteTaskAction | CreateTaskAction
+type Actions =
+  CreateTodolistAction
+  | DeleteTodolistAction
+  | DeleteTaskAction
+  | CreateTaskAction
+  | ChangeTaskStatusAction
 
