@@ -1,6 +1,6 @@
 import './App.css'
 import {TodolistItem} from './TodolistItem.tsx';
-import {useState} from 'react';
+import {useReducer, useState} from 'react';
 import {v1} from 'uuid';
 import {CreateItemForm} from './CreateItemForm.tsx';
 import {
@@ -16,6 +16,13 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu'
 import {NavButton} from './NavButton.ts';
+import {
+  changeTodolistFilterAC,
+  changeTodolistTitleAC,
+  createTodolistAC,
+  deleteTodolistAC,
+  todolistsReducer
+} from './model/todolists-reducer.ts';
 
 
 type ThemeMode = 'dark' | 'light'
@@ -42,7 +49,7 @@ function App() {
   const todolistId2 = v1()
 
 
-  const [todolists, setTodolists] = useState<Todolist[]>([
+  const [todolists, dispatchToTodolists] = useReducer(todolistsReducer, [
     {id: todolistId1, title: 'What to learn', filter: 'all'},
     {id: todolistId2, title: 'What to buy', filter: 'all'}
   ]);
@@ -82,8 +89,8 @@ function App() {
   }
 
 
-  const changeFilter = (todolistID: string, filter: FilterValueTitle) => {
-    setTodolists(todolists.map(t => t.id === todolistID ? {...t, filter} : t));
+  const changeFilter = (id: string, filter: FilterValueTitle) => {
+    dispatchToTodolists(changeTodolistFilterAC({id, filter}));
   }
 
   const createItem = (todolistId: string, title: string) => {
@@ -92,91 +99,90 @@ function App() {
     setTasks(newItems)
   }
 
-  const changeTaskStatus = (todolistId: string, taskID: string, isDone: boolean) => {
+  const changeTaskStatus = (id: string, taskID: string, isDone: boolean) => {
     const taskChecked = {
       ...tasks,
-      [todolistId]: tasks[todolistId].map(t => t.id === taskID ? {...t, isDone: isDone} : t)
+      [id]: tasks[id].map(t => t.id === taskID ? {...t, isDone: isDone} : t)
     }
     setTasks(taskChecked)
   }
-  const deleteTodolist = (todolistId: string) => {
-    setTodolists(todolists.filter(todolist => todolist.id !== todolistId))
-    delete tasks[todolistId]
+  const deleteTodolist = (id: string) => {
+    dispatchToTodolists(deleteTodolistAC(id))
+    delete tasks[id]
     setTasks({...tasks})
   }
   const createTodolist = (title: string) => {
-    const todolistId = v1()
-    const newTodolist: Todolist = {id: todolistId, title, filter: 'all'}
-    setTodolists(prev => [...prev, newTodolist])
-    setTasks(prev => ({...prev, [todolistId]: []}))
+    const action = createTodolistAC(title)
+    dispatchToTodolists(action)
+    setTasks(prev => ({...prev, [action.payload.id]: []}))
   }
 
-  const changeTaskTitle = (todolistId: string, taskID: string, title: string) => {
+  const changeTaskTitle = (id: string, taskID: string, title: string) => {
     const newTaskTitle = {
       ...tasks,
-      [todolistId]: tasks[todolistId].map(t => t.id === taskID ? {...t, title} : t)
+      [id]: tasks[id].map(t => t.id === taskID ? {...t, title} : t)
     }
     setTasks(newTaskTitle)
   }
   const changeTodolistTitle = (todolistId: string, title: string) => {
-    setTodolists(todolists.map(t => t.id === todolistId ? {...t, title} : t));
+    dispatchToTodolists(changeTodolistTitleAC({id: todolistId, title}));
   }
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-    <div className="app">
-      <AppBar position="static" sx={{mb:'30px'}}>
-        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Container maxWidth={'lg'} sx={{display: 'flex', flexDirection: 'row',justifyContent: 'space-between'}}>
-            <IconButton color="inherit">
-              <MenuIcon/>
-            </IconButton>
-            <div>
-              <NavButton color="inherit">Sign in</NavButton>
-              <NavButton color="inherit">Sign up</NavButton>
-              <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
-              <Switch color={'default'} onChange={changeMode}></Switch>
-            </div>
-          </Container>
-        </Toolbar>
-      </AppBar>
-      <Container maxWidth={'lg'} >
-        <Grid container  sx={{ mb: '30px' }}>
-          <CreateItemForm createItem={createTodolist}/>
-        </Grid>
+      <CssBaseline/>
+      <div className="app">
+        <AppBar position="static" sx={{mb: '30px'}}>
+          <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
+            <Container maxWidth={'lg'} sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+              <IconButton color="inherit">
+                <MenuIcon/>
+              </IconButton>
+              <div>
+                <NavButton color="inherit">Sign in</NavButton>
+                <NavButton color="inherit">Sign up</NavButton>
+                <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
+                <Switch color={'default'} onChange={changeMode}></Switch>
+              </div>
+            </Container>
+          </Toolbar>
+        </AppBar>
+        <Container maxWidth={'lg'}>
+          <Grid container sx={{mb: '30px'}}>
+            <CreateItemForm createItem={createTodolist}/>
+          </Grid>
 
 
-        <Grid container spacing={4}>
-          {todolists.map(todolist => {
-              const todolistTasks = tasks[todolist.id]
-              let filteredTasks = todolistTasks
-              if (todolist.filter === 'active') {
-                filteredTasks = todolistTasks.filter(task => !task.isDone)
+          <Grid container spacing={4}>
+            {todolists?.map(todolist => {
+                const todolistTasks = tasks[todolist.id]
+                let filteredTasks = todolistTasks
+                if (todolist.filter === 'active') {
+                  filteredTasks = todolistTasks.filter(task => !task.isDone)
+                }
+                if (todolist.filter === 'completed') {
+                  filteredTasks = todolistTasks.filter(task => task.isDone)
+                }
+                return <Grid key={todolist.id}>
+                  <Paper sx={{p: '0 20px 20px 20px'}}>
+                    <TodolistItem
+                      todolist={todolist}
+                      tasks={filteredTasks}
+                      deleteTask={deleteTask}
+                      changeFilter={changeFilter}
+                      createItem={createItem}
+                      changeTaskStatus={changeTaskStatus}
+                      deleteTodolist={deleteTodolist}
+                      changeTaskTitle={changeTaskTitle}
+                      changeTodolistTitle={changeTodolistTitle}
+                    />
+                  </Paper>
+                </Grid>
               }
-              if (todolist.filter === 'completed') {
-                filteredTasks = todolistTasks.filter(task => task.isDone)
-              }
-              return <Grid key={todolist.id}>
-                <Paper sx={{ p: '0 20px 20px 20px' }}>
-                <TodolistItem
-                  todolist={todolist}
-                  tasks={filteredTasks}
-                  deleteTask={deleteTask}
-                  changeFilter={changeFilter}
-                  createItem={createItem}
-                  changeTaskStatus={changeTaskStatus}
-                  deleteTodolist={deleteTodolist}
-                  changeTaskTitle={changeTaskTitle}
-                  changeTodolistTitle={changeTodolistTitle}
-                />
-                </Paper>
-              </Grid>
-            }
-          )}
-        </Grid>
-      </Container>
-    </div>
+            )}
+          </Grid>
+        </Container>
+      </div>
     </ThemeProvider>
   )
 }
