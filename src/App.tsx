@@ -93,7 +93,7 @@ function App() {
     dispatchToTodolists(changeTodolistFilterAC({id, filter}));
   }
 
-  const createItem = (todolistId: string, title: string) => {
+  const createTask = (todolistId: string, title: string) => {
     const newItem = {id: v1(), title: title, isDone: false}
     const newItems = {...tasks, [todolistId]: [newItem, ...tasks[todolistId]]}
     setTasks(newItems)
@@ -170,7 +170,7 @@ function App() {
                       tasks={filteredTasks}
                       deleteTask={deleteTask}
                       changeFilter={changeFilter}
-                      createItem={createItem}
+                      createItem={createTask}
                       changeTaskStatus={changeTaskStatus}
                       deleteTodolist={deleteTodolist}
                       changeTaskTitle={changeTaskTitle}
