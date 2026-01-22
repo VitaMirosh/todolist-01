@@ -25,12 +25,25 @@ export const tasksReducer = (state: TasksState = initialState, action: Actions):
       const newItems = {...state, [action.payload.id]: [newItem, ...state[action.payload.id]]}
       return newItems
     }
-    case 'change_task_status':{
+    case 'change_task_status': {
       const taskChecked = {
         ...state,
-        [action.payload.id]: state[action.payload.id].map(t => t.id === action.payload.taskID ? {...t, isDone:action.payload.isDone} : t)
+        [action.payload.id]: state[action.payload.id].map(t => t.id === action.payload.taskID ? {
+          ...t,
+          isDone: action.payload.isDone
+        } : t)
       }
       return taskChecked
+    }
+    case 'change_task_title': {
+      const newTaskTitle = {
+        ...state,
+        [action.payload.id]: state[action.payload.id].map(t => t.id === action.payload.taskID ? {
+          ...t,
+          title: action.payload.title
+        } : t)
+      }
+     return newTaskTitle
     }
 
     default:
@@ -57,11 +70,18 @@ export const changeTaskStatusAC = (payload: { id: string, taskID: string, isDone
     payload
   } as const
 }
+export const changeTaskTitleAC = (payload: { id: string, taskID: string, title: string }) => {
+  return {
+    type: 'change_task_title',
+    payload
+  } as const
+}
 
 
 type DeleteTaskAction = ReturnType<typeof deleteTaskAC>
 type CreateTaskAction = ReturnType<typeof createTaskAC>
 type ChangeTaskStatusAction = ReturnType<typeof changeTaskStatusAC>
+type ChangeTaskTitleAction = ReturnType<typeof changeTaskTitleAC>
 
 type Actions =
   CreateTodolistAction
@@ -69,4 +89,4 @@ type Actions =
   | DeleteTaskAction
   | CreateTaskAction
   | ChangeTaskStatusAction
-
+  | ChangeTaskTitleAction
