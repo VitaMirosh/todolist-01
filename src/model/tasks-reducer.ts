@@ -6,6 +6,7 @@ const initialState: TasksState = {}
 
 export const tasksReducer = (state: TasksState = initialState, action: Actions): TasksState => {
   switch (action.type) {
+
     case 'create_todolist': {
       return {...state, [action.payload.id]: []}
     }
@@ -43,7 +44,7 @@ export const tasksReducer = (state: TasksState = initialState, action: Actions):
           title: action.payload.title
         } : t)
       }
-     return newTaskTitle
+      return newTaskTitle
     }
 
     default:
@@ -76,12 +77,16 @@ export const changeTaskTitleAC = (payload: { id: string, taskID: string, title: 
     payload
   } as const
 }
+export const createTodolistTasksAC = (id: string) => {
+  return {type: 'create_todolist', payload: {id}} as const
+}
 
 
 type DeleteTaskAction = ReturnType<typeof deleteTaskAC>
 type CreateTaskAction = ReturnType<typeof createTaskAC>
 type ChangeTaskStatusAction = ReturnType<typeof changeTaskStatusAC>
 type ChangeTaskTitleAction = ReturnType<typeof changeTaskTitleAC>
+type CreateTodolistTaskAction = ReturnType<typeof createTodolistTasksAC>
 
 type Actions =
   CreateTodolistAction
@@ -90,3 +95,4 @@ type Actions =
   | CreateTaskAction
   | ChangeTaskStatusAction
   | ChangeTaskTitleAction
+  | CreateTodolistTaskAction
