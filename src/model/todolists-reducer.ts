@@ -1,4 +1,4 @@
-import {FilterValueTitle, Todolist} from '../App.tsx';
+import {FilterValueTitle, Todolist} from '../app/App.tsx';
 import {v1} from 'uuid';
 
 

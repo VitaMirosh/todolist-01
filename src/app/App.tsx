@@ -1,8 +1,8 @@
 import './App.css'
-import {TodolistItem} from './TodolistItem.tsx';
+import {TodolistItem} from '../TodolistItem.tsx';
 import {useReducer, useState} from 'react';
 import {v1} from 'uuid';
-import {CreateItemForm} from './CreateItemForm.tsx';
+import {CreateItemForm} from '../CreateItemForm.tsx';
 import {
   AppBar,
   Container,
@@ -15,21 +15,21 @@ import {
   Toolbar
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu'
-import {NavButton} from './NavButton.ts';
+import {NavButton} from '../NavButton.ts';
 import {
   changeTodolistFilterAC,
   changeTodolistTitleAC,
   createTodolistAC,
   deleteTodolistAC,
   todolistsReducer
-} from './model/todolists-reducer.ts';
+} from '../model/todolists-reducer.ts';
 import {
   changeTaskStatusAC,
   changeTaskTitleAC,
   createTaskAC, createTodolistTasksAC,
   deleteTaskAC,
   tasksReducer
-} from './model/tasks-reducer.ts';
+} from '../model/tasks-reducer.ts';
 
 
 type ThemeMode = 'dark' | 'light'
