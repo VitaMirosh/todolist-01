@@ -23,9 +23,10 @@ import {
   deleteTodolistAC
 } from '../model/todolists-reducer.ts';
 import {changeTaskStatusAC, changeTaskTitleAC, createTaskAC, deleteTaskAC} from '../model/tasks-reducer.ts';
-import {RootState} from './store.ts';
 import {useAppDispatch} from '../common/hooks/useAppDispatch.ts';
 import {useAppSelector} from '../common/hooks/useAppSelector.ts';
+import {selectTodolists} from '../model/todolists-selector.ts';
+import {selectTasks} from '../model/tasks-selector.ts';
 
 
 type ThemeMode = 'dark' | 'light'
@@ -47,8 +48,8 @@ export type TasksState = {
 export type FilterValueTitle = 'all' | 'active' | 'completed';
 
 function App() {
-  const todolists = useAppSelector<RootState, Todolist[]>(state => state.todolists)
-  const tasks = useAppSelector<RootState, TasksState>(state => state.tasks)
+  const todolists = useAppSelector(selectTodolists)
+  const tasks = useAppSelector(selectTasks)
 
   const dispatch = useAppDispatch();
 
