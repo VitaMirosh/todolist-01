@@ -1,9 +1,7 @@
 import './App.css'
 import {TodolistItem} from '../TodolistItem.tsx';
 import {CreateItemForm} from '../CreateItemForm.tsx';
-import {AppBar, Container, CssBaseline, Grid, IconButton, Paper, Switch, ThemeProvider, Toolbar} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu'
-import {NavButton} from '../NavButton.ts';
+import {Container, CssBaseline, Grid, Paper, ThemeProvider} from '@mui/material';
 import {
   changeTodolistFilterAC,
   changeTodolistTitleAC,
@@ -15,9 +13,9 @@ import {useAppDispatch} from '../common/hooks/useAppDispatch.ts';
 import {useAppSelector} from '../common/hooks/useAppSelector.ts';
 import {selectTodolists} from '../model/todolists-selector.ts';
 import {selectTasks} from '../model/tasks-selector.ts';
-import {changeThemeModeAC} from './app-reducer.ts';
 import {selectThemeMode} from './app-selector.ts';
 import {getTheme} from '../common/theme/theme.ts';
+import Header from '@/Header.tsx';
 
 
 export type Task = {
@@ -42,12 +40,8 @@ function App() {
 
 
   const dispatch = useAppDispatch();
+
   const theme = getTheme(themeMode);
-
-
-  const changeMode = () => {
-    dispatch(changeThemeModeAC({themeMode: themeMode === 'light' ? 'dark' : 'light'}))
-  }
 
 
   const changeFilter = (todolistId: string, filter: FilterValueTitle) => {
@@ -87,21 +81,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline/>
       <div className="app">
-        <AppBar position="static" sx={{mb: '30px'}}>
-          <Toolbar sx={{display: 'flex', justifyContent: 'space-between'}}>
-            <Container maxWidth={'lg'} sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-              <IconButton color="inherit">
-                <MenuIcon/>
-              </IconButton>
-              <div>
-                <NavButton color="inherit">Sign in</NavButton>
-                <NavButton color="inherit">Sign up</NavButton>
-                <NavButton background={theme.palette.primary.dark}>Faq</NavButton>
-                <Switch color={'default'} onChange={changeMode}></Switch>
-              </div>
-            </Container>
-          </Toolbar>
-        </AppBar>
+       < Header/>
         <Container maxWidth={'lg'}>
           <Grid container sx={{mb: '30px'}}>
             <CreateItemForm createItem={createTodolist}/>
