@@ -1,5 +1,11 @@
-import {FilterValueTitle, Todolist} from '../app/App.tsx';
 import {createAction, createReducer, nanoid} from '@reduxjs/toolkit';
+
+export type FilterValueTitle = 'all' | 'active' | 'completed';
+export type Todolist = {
+  id: string
+  title: string
+  filter: FilterValueTitle
+}
 
 export const deleteTodolistAC = createAction<{ id: string }>('todolists/deleteTodolist')
 
@@ -15,7 +21,6 @@ export const changeTodolistFilterAC = createAction<{
 }>('todolists/changeTodolistFilterAC')
 
 
-
 const initialState: Todolist[] = []
 
 export const todolistsReducer = createReducer(initialState, (builder) => {
@@ -27,7 +32,7 @@ export const todolistsReducer = createReducer(initialState, (builder) => {
       }
     })
     .addCase(createTodolistAC, (state, action) => {
-      const newTodolist : Todolist ={id:action.payload.id,title:action.payload.title,filter:'all'}
+      const newTodolist: Todolist = {id: action.payload.id, title: action.payload.title, filter: 'all'}
       state.push(newTodolist)
     })
     .addCase(changeTodolistTitleAC, (state, action) => {

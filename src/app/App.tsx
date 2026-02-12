@@ -3,24 +3,10 @@ import {CssBaseline, ThemeProvider} from '@mui/material';
 import {useAppSelector} from '../common/hooks/useAppSelector.ts';
 import {selectThemeMode} from './app-selector.ts';
 import {getTheme} from '../common/theme/theme.ts';
-import Header from '@/Header.tsx';
-import Main from '@/app/Main.tsx';
+import {Main} from '@/app/Main.tsx';
+import {Header} from '@/Header.tsx';
 
 
-export type Task = {
-  id: string
-  title: string
-  isDone: boolean
-}
-export type Todolist = {
-  id: string
-  title: string
-  filter: FilterValueTitle
-}
-export type TasksState = {
-  [key: string]: Task[]
-}
-export type FilterValueTitle = 'all' | 'active' | 'completed';
 
 function App() {
 
