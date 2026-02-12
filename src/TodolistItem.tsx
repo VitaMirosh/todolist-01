@@ -5,17 +5,12 @@ import {Box, Checkbox, IconButton, List, ListItem} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button'
 import {containerSx, getListItemSx} from './TodolistItem.styles.ts';
-import {
-  changeTodolistFilterAC,
-  changeTodolistTitleAC,
-  deleteTodolistAC,
-  FilterValueTitle,
-  Todolist
-} from '@/model/todolists-reducer.ts';
+import {changeTodolistFilterAC, FilterValueTitle, Todolist} from '@/model/todolists-reducer.ts';
 import {useAppSelector} from '@/common/hooks/useAppSelector.ts';
 import {selectTasks} from '@/model/tasks-selector.ts';
 import {changeTaskStatusAC, changeTaskTitleAC, createTaskAC, deleteTaskAC} from '@/model/tasks-reducer.ts';
 import {useAppDispatch} from '@/common/hooks/useAppDispatch.ts';
+import {TodolistTitle} from '@/TodolistTitle.tsx';
 
 
 type Props = {
@@ -24,7 +19,7 @@ type Props = {
 
 
 export const TodolistItem = ({todolist}:Props)=>{
-  const {id,title,filter}=todolist
+  const {id,filter}=todolist
 
   const tasks = useAppSelector(selectTasks)
 
@@ -41,25 +36,15 @@ export const TodolistItem = ({todolist}:Props)=>{
   const changeFilterHandler = (filter: FilterValueTitle) => {
     dispatch(changeTodolistFilterAC({id, filter}));
   }
-  const deleteTodolistHandler = () => {
-    dispatch(deleteTodolistAC({id}))
-  }
+
   const createItemHandler = (title: string) => {
     dispatch(createTaskAC({id: id, title}))
   }
-  const changeTodolistHandler = (title: string) => {
-    dispatch(changeTodolistTitleAC({id, title}))
-  }
+
 
   return (
     <div>
-      <div className={'container'}>
-        <h3><EditableSpan value={title} onChange={changeTodolistHandler}/></h3>
-        <IconButton onClick={deleteTodolistHandler}>
-          <DeleteIcon/>
-        </IconButton>
-      </div>
-
+      <TodolistTitle todolist={todolist}/>
       <CreateItemForm createItem={createItemHandler}/>
       {filteredTasks.length === 0 ? (<p>"Тасок нет"</p>) :
         <List>
