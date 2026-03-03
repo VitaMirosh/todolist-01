@@ -4,13 +4,16 @@ import { createTodolistTC, deleteTodolistTC } from "@/features/todolists/model/t
 export const tasksSlice = createSlice({
   name: "tasks",
   initialState: {} as TasksState,
+  selectors: {
+    selectTasks: (state): TasksState => state,
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createTodolistTC.fulfilled, (state, action) => {
         state[action.payload.data.item.id] = []
       })
       .addCase(deleteTodolistTC.fulfilled, (state, action) => {
-        delete state[action.type]
+        delete state[action.payload.id]
       })
   },
   reducers: (create) => ({
@@ -41,7 +44,7 @@ export const tasksSlice = createSlice({
 })
 export const { deleteTaskAC, createTaskAC, changeTaskStatusAC, changeTaskTitleAC } = tasksSlice.actions
 export const tasksReducer = tasksSlice.reducer
-
+export const { selectTasks } = tasksSlice.selectors
 export type Task = {
   id: string
   title: string

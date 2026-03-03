@@ -32,7 +32,7 @@ export const todolistsSlice = createSlice({
         })
       })
       .addCase(deleteTodolistTC.fulfilled, (state, action) => {
-        const index = state.findIndex((todolist) => todolist.id === action.payload)
+        const index = state.findIndex((todolist) => todolist.id === action.payload.id)
         if (index !== -1) {
           state.splice(index, 1)
         }
@@ -87,6 +87,7 @@ export const deleteTodolistTC = createAsyncThunk(
   async (id: string, thunkAPI) => {
     try {
       await todolistsApi.deleteTodolist(id)
+      return { id }
     } catch {
       return thunkAPI.rejectWithValue(null)
     }
