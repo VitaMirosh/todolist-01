@@ -6,8 +6,8 @@ import {
   deleteTaskAC,
   tasksSlice,
   type TasksState,
-} from "../tasks-slice.ts"
-import { createTodolistAC, deleteTodolistAC } from "../todolists-slice.ts"
+} from "../tasks-slice"
+import { createTodolistAC, deleteTodolistAC } from "../todolists-slice"
 
 let startState: TasksState = {}
 
@@ -59,7 +59,10 @@ test("correct task should be created at correct array", () => {
 })
 
 test("correct task should change its status", () => {
-  const endState = tasksSlice(startState, changeTaskStatusAC({ todolistId: "todolistId2", taskId: "2", isDone: false }))
+  const endState = tasksSlice(
+    startState,
+    changeTaskStatusAC({ todolistId: "todolistId2", taskId: "2", isDone: false }),
+  )
 
   expect(endState.todolistId2[1].isDone).toBe(false)
   expect(endState.todolistId1[1].isDone).toBe(true)

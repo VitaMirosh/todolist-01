@@ -1,3 +1,4 @@
+import type { Todolist } from "@/features/todolists/api/todolistsApi.types"
 import { nanoid } from "@reduxjs/toolkit"
 import { beforeEach, expect, test } from "vitest"
 import {
@@ -5,9 +6,8 @@ import {
   changeTodolistTitleAC,
   createTodolistAC,
   deleteTodolistAC,
-  type Todolist,
   todolistsSlice,
-} from "../todolists-slice.ts"
+} from "../todolists-slice"
 
 let todolistId1: string
 let todolistId2: string
