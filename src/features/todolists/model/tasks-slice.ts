@@ -2,6 +2,7 @@ import { createTodolistTC, deleteTodolistTC } from "./todolists-slice"
 import { createAppSlice } from "@/common/utils/createAppSlice.ts"
 import { tasksApi } from "@/features/todolists/api/tasksApi.ts"
 import { DomainTask } from "@/features/todolists/api/tasksApi.types.ts"
+import { changeStatusAC } from "@/app/app-slice.ts"
 
 export const tasksSlice = createAppSlice({
   name: "tasks",
@@ -37,10 +38,11 @@ export const tasksSlice = createAppSlice({
     ),
 
     createTaskTC: create.asyncThunk(
-      async (args: { todolistId: string; title: string }, { rejectWithValue }) => {
+      async (args: { todolistId: string; title: string }, { rejectWithValue, dispatch }) => {
         try {
+          dispatch(changeStatusAC({ status: "loading" }))
           const res = await tasksApi.createTask(args)
-          // return { todolists: res.data }
+          dispatch(changeStatusAC({ status: "succeeded" }))
           return res.data.data.item
         } catch (error) {
           return rejectWithValue(null)
