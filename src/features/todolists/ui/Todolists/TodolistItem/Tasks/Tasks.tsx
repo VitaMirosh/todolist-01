@@ -15,6 +15,7 @@ export const Tasks = ({ todolist }: Props) => {
 
   const tasks = useAppSelector(selectTasks)
   const dispatch = useAppDispatch()
+
   useEffect(() => {
     dispatch(fetchTasks(id))
   }, [])
