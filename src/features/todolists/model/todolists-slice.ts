@@ -1,5 +1,5 @@
 import { setAppErrorAC, setAppStatusAC } from "@/app/app-slice"
-import { createAppSlice } from "@/common/utils"
+import { createAppSlice, handleCatchError } from "@/common/utils"
 import { todolistsApi } from "@/features/todolists/api/todolistsApi"
 import type { Todolist } from "@/features/todolists/api/todolistsApi.types"
 import { RequestStatus } from "@/common/types"
@@ -51,8 +51,7 @@ export const todolistsSlice = createAppSlice({
             return rejectWithValue(null)
           }
         } catch (error: any) {
-          dispatch(setAppStatusAC({ status: "failed" }))
-          dispatch(setAppErrorAC({ error: error.response?.data?.message || error.message }))
+          handleCatchError(error, dispatch)
           return rejectWithValue(null)
         }
       },
