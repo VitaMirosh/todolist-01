@@ -1,9 +1,9 @@
-import { setAppErrorAC, setAppStatusAC } from "@/app/app-slice"
-import { createAppSlice, handleCatchError } from "@/common/utils"
+import { setAppStatusAC } from "@/app/app-slice"
+import { ResultCode } from "@/common/enums"
+import type { RequestStatus } from "@/common/types"
+import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
 import { todolistsApi } from "@/features/todolists/api/todolistsApi"
 import type { Todolist } from "@/features/todolists/api/todolistsApi.types"
-import { RequestStatus } from "@/common/types"
-import { ResultCode } from "@/common/enums"
 
 export const todolistsSlice = createAppSlice({
   name: "todolists",
@@ -20,18 +20,14 @@ export const todolistsSlice = createAppSlice({
           dispatch(setAppStatusAC({ status: "succeeded" }))
           return { todolists: res.data }
         } catch (error) {
-          dispatch(setAppStatusAC({ status: "failed" }))
+          handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }
       },
       {
         fulfilled: (state, action) => {
           action.payload?.todolists.forEach((tl) => {
-            return state.push({
-              ...tl,
-              filter: "all",
-              entityStatus: "idle",
-            })
+            state.push({ ...tl, filter: "all", entityStatus: "idle" })
           })
         },
       },
@@ -45,23 +41,17 @@ export const todolistsSlice = createAppSlice({
             dispatch(setAppStatusAC({ status: "succeeded" }))
             return { todolist: res.data.data.item }
           } else {
-            dispatch(setAppStatusAC({ status: "failed" }))
-            const error = res.data.messages.length ? res.data.messages[0] : "Something went wrong"
-            dispatch(setAppErrorAC({ error }))
+            handleServerAppError(res.data, dispatch)
             return rejectWithValue(null)
           }
-        } catch (error: any) {
-          handleCatchError(error, dispatch)
+        } catch (error) {
+          handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }
       },
       {
         fulfilled: (state, action) => {
-          state.unshift({
-            ...action.payload.todolist,
-            filter: "all",
-            entityStatus: "idle",
-          })
+          state.unshift({ ...action.payload.todolist, filter: "all", entityStatus: "idle" })
         },
       },
     ),
@@ -70,12 +60,18 @@ export const todolistsSlice = createAppSlice({
         try {
           dispatch(setAppStatusAC({ status: "loading" }))
           dispatch(changeTodolistStatusAC({ id, entityStatus: "loading" }))
-          await todolistsApi.deleteTodolist(id)
-          dispatch(setAppStatusAC({ status: "succeeded" }))
-          return { id }
+          const res = await todolistsApi.deleteTodolist(id)
+          if (res.data.resultCode === ResultCode.Success) {
+            dispatch(setAppStatusAC({ status: "succeeded" }))
+            return { id }
+          } else {
+            dispatch(changeTodolistStatusAC({ id, entityStatus: "failed" }))
+            handleServerAppError(res.data, dispatch)
+            return rejectWithValue(null)
+          }
         } catch (error) {
-          dispatch(setAppStatusAC({ status: "failed" }))
-          dispatch(changeTodolistStatusAC({ id, entityStatus: "loading" }))
+          dispatch(changeTodolistStatusAC({ id, entityStatus: "failed" }))
+          handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }
       },
@@ -92,11 +88,16 @@ export const todolistsSlice = createAppSlice({
       async (payload: { id: string; title: string }, { dispatch, rejectWithValue }) => {
         try {
           dispatch(setAppStatusAC({ status: "loading" }))
-          await todolistsApi.changeTodolistTitle(payload)
-          dispatch(setAppStatusAC({ status: "succeeded" }))
-          return payload
+          const res = await todolistsApi.changeTodolistTitle(payload)
+          if (res.data.resultCode === ResultCode.Success) {
+            dispatch(setAppStatusAC({ status: "succeeded" }))
+            return payload
+          } else {
+            handleServerAppError(res.data, dispatch)
+            return rejectWithValue(null)
+          }
         } catch (error) {
-          dispatch(setAppStatusAC({ status: "failed" }))
+          handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }
       },
