@@ -10,16 +10,15 @@ import FormLabel from "@mui/material/FormLabel"
 import TextField from "@mui/material/TextField"
 import { Grid } from "@mui/material"
 import { Controller, SubmitHandler, useForm } from "react-hook-form"
-import styles from "./Login.module.css"
 import { loginSchema } from "@/features/auth/lib/schemas"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LoginInputs } from "@/features/auth/lib/schemas/types.ts"
+
 export const Login = () => {
   const themeMode = useAppSelector(selectThemeMode)
 
   const theme = getTheme(themeMode)
   const {
-    register,
     handleSubmit,
     reset,
     control,
@@ -59,27 +58,46 @@ export const Login = () => {
             </p>
           </FormLabel>
           <FormGroup>
-            <TextField label="Email" margin="normal" error={!!errors.email} {...register("email")} />
-            {errors.email && <span className={styles.errorMessage}>{errors.email.message}</span>}
-            <TextField
-              type="password"
-              label="Password"
-              margin="normal"
-              error={!!errors.password}
-              {...register("password")}
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Email"
+                  margin="normal"
+                  error={!!errors.email}
+                  helperText={errors.email?.message}
+                />
+              )}
             />
-            {errors.password && <span className={styles.errorMessage}>{errors.password.message}</span>}
+
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  type="password"
+                  label="Password"
+                  margin="normal"
+                  error={!!errors.password}
+                  helperText={errors.password?.message}
+                />
+              )}
+            />
 
             <FormControlLabel
               label="Remember me"
               control={
                 <Controller
-                  name={"rememberMe"}
+                  name="rememberMe"
                   control={control}
                   render={({ field: { value, ...rest } }) => <Checkbox {...rest} checked={value} />}
                 />
               }
             />
+
             <Button type="submit" variant="contained" color="primary">
               Login
             </Button>
