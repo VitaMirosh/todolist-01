@@ -1,17 +1,7 @@
-import type { TaskPriority, TaskStatus } from "@/common/enums/enums"
+import z from "zod/v4"
+import { domainTaskSchema, UpdateTaskSchema } from "@/features/todolists/model/schemas/schemas.ts"
 
-export type DomainTask = {
-  description: string
-  title: string
-  status: TaskStatus
-  priority: TaskPriority
-  startDate: string
-  deadline: string
-  id: string
-  todoListId: string
-  order: number
-  addedDate: string
-}
+export type DomainTask = z.infer<typeof domainTaskSchema>
 
 export type GetTasksResponse = {
   error: string | null
@@ -19,11 +9,4 @@ export type GetTasksResponse = {
   items: DomainTask[]
 }
 
-export type UpdateTaskModel = {
-  description: string
-  title: string
-  status: TaskStatus
-  priority: TaskPriority
-  startDate: string
-  deadline: string
-}
+export type UpdateTaskModel = z.infer<typeof UpdateTaskSchema>
