@@ -4,7 +4,7 @@ import { Login } from "@/features/todolists/ui/Login/Login"
 import { PageNotFound } from "@/common/components"
 export const Path = {
   Main: "/",
-  Login: "login",
+  Login: "/login",
   NotFound: "*",
 } as const
 
