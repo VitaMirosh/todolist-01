@@ -3,8 +3,10 @@ import type { RootState } from "@/app/store"
 import { ResultCode } from "@/common/enums"
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
 import { tasksApi } from "@/features/todolists/api/tasksApi"
-import type { DomainTask, UpdateTaskModel } from "@/features/todolists/api/tasksApi.types"
+import { DomainTask, UpdateTaskModel } from "@/features/todolists/api/tasksApi.types"
 import { createTodolistTC, deleteTodolistTC } from "./todolists-slice"
+import { changeTitleSchema, domainTaskSchema, UpdateTaskSchema } from "@/features/todolists/model/schemas/schemas.ts"
+import { ZodError } from "zod"
 
 export const tasksSlice = createAppSlice({
   name: "tasks",
@@ -27,9 +29,11 @@ export const tasksSlice = createAppSlice({
         try {
           dispatch(setAppStatusAC({ status: "loading" }))
           const res = await tasksApi.getTasks(todolistId)
+          domainTaskSchema.array().parse(res.data.items)
           dispatch(setAppStatusAC({ status: "succeeded" }))
           return { todolistId, tasks: res.data.items }
         } catch (error) {
+          console.log(error)
           handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }
@@ -46,8 +50,9 @@ export const tasksSlice = createAppSlice({
           dispatch(setAppStatusAC({ status: "loading" }))
           const res = await tasksApi.createTask(payload)
           if (res.data.resultCode === ResultCode.Success) {
+            const task = domainTaskSchema.parse(res.data.data.item)
             dispatch(setAppStatusAC({ status: "succeeded" }))
-            return { task: res.data.data.item }
+            return { task }
           } else {
             handleServerAppError(res.data, dispatch)
             return rejectWithValue(null)
@@ -103,28 +108,32 @@ export const tasksSlice = createAppSlice({
         if (!task) {
           return rejectWithValue(null)
         }
-
         const model: UpdateTaskModel = {
+          ...domainModel,
           description: task.description,
           title: task.title,
           priority: task.priority,
           startDate: task.startDate,
           deadline: task.deadline,
           status: task.status,
-          ...domainModel,
         }
 
         try {
           dispatch(setAppStatusAC({ status: "loading" }))
+          UpdateTaskSchema.parse(model)
           const res = await tasksApi.updateTask({ todolistId, taskId, model })
           if (res.data.resultCode === ResultCode.Success) {
+            const updatedTask = domainTaskSchema.parse(res.data.data.item)
             dispatch(setAppStatusAC({ status: "succeeded" }))
-            return { task: res.data.data.item }
+            return { task: updatedTask }
           } else {
             handleServerAppError(res.data, dispatch)
             return rejectWithValue(null)
           }
         } catch (error) {
+          if (error instanceof ZodError) {
+            console.log("Zod validation error:", error)
+          }
           handleServerNetworkError(dispatch, error)
           return rejectWithValue(null)
         }
@@ -140,6 +149,7 @@ export const tasksSlice = createAppSlice({
       },
     ),
     changeTaskTitleAC: create.reducer<{ todolistId: string; taskId: string; title: string }>((state, action) => {
+      changeTitleSchema.parse({ title: action.payload.title })
       const task = state[action.payload.todolistId].find((task) => task.id === action.payload.taskId)
       if (task) {
         task.title = action.payload.title
