@@ -1,10 +1,11 @@
-import { Route, Routes } from "react-router"
-import { Main } from "@/app/Main.tsx"
-import { Login } from "@/features/todolists/ui/Login/Login"
+import { Main } from "@/app/Main"
 import { PageNotFound } from "@/common/components"
+import { Login } from "@/features/auth/ui/Login/Login"
+import { Route, Routes } from "react-router"
+
 export const Path = {
   Main: "/",
-  Login: "/login",
+  Login: "login",
   NotFound: "*",
 } as const
 
