@@ -1,7 +1,9 @@
 import { Main } from "@/app/Main"
-import { PageNotFound } from "@/common/components"
+import { PageNotFound, ProtectedRoutes } from "@/common/components"
 import { Login } from "@/features/auth/ui/Login/Login"
 import { Route, Routes } from "react-router"
+import { useAppSelector } from "@/common/hooks"
+import { selectIsLoggedIn } from "@/features/auth/model/auth-slice.ts"
 
 export const Path = {
   Main: "/",
@@ -9,10 +11,20 @@ export const Path = {
   NotFound: "*",
 } as const
 
-export const Routing = () => (
-  <Routes>
-    <Route path={Path.Main} element={<Main />} />
-    <Route path={Path.Login} element={<Login />} />
-    <Route path={Path.NotFound} element={<PageNotFound />} />
-  </Routes>
-)
+export const Routing = () => {
+  const isLoggedIn = useAppSelector(selectIsLoggedIn)
+
+  return (
+    <Routes>
+      <Route element={<ProtectedRoutes redirectPath={Path.Login} isAllowed={!isLoggedIn} children={undefined} />}>
+        <Route path={Path.Main} element={<Main />} />
+      </Route>
+
+      <Route element={<ProtectedRoutes redirectPath={Path.Main} isAllowed={isLoggedIn} children={undefined} />}>
+        <Route path={Path.Login} element={<Login />} />
+      </Route>
+
+      <Route path={Path.NotFound} element={<PageNotFound />} />
+    </Routes>
+  )
+}
