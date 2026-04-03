@@ -2,7 +2,7 @@ import { Navigate, Outlet } from "react-router"
 import { ReactNode } from "react"
 
 type Props = {
-  children: ReactNode
+  children?: ReactNode
   redirectPath: string
   isAllowed: boolean
 }

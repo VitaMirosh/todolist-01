@@ -20,7 +20,7 @@ export const App = () => {
     dispatch(meTC())
       .unwrap()
       .finally(() => {
-        setIsInit(false)
+        setIsInit(true)
       })
   }, [])
 

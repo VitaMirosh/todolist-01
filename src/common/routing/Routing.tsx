@@ -16,11 +16,11 @@ export const Routing = () => {
 
   return (
     <Routes>
-      <Route element={<ProtectedRoutes redirectPath={Path.Login} isAllowed={!isLoggedIn} children={undefined} />}>
+      <Route element={<ProtectedRoutes redirectPath={Path.Login} isAllowed={!isLoggedIn} />}>
         <Route path={Path.Main} element={<Main />} />
       </Route>
 
-      <Route element={<ProtectedRoutes redirectPath={Path.Main} isAllowed={isLoggedIn} children={undefined} />}>
+      <Route element={<ProtectedRoutes redirectPath={Path.Main} isAllowed={isLoggedIn} />}>
         <Route path={Path.Login} element={<Login />} />
       </Route>
 
