@@ -7,7 +7,7 @@ import { selectIsLoggedIn } from "@/features/auth/model/auth-slice.ts"
 
 export const Path = {
   Main: "/",
-  Login: "login",
+  Login: "/login",
   NotFound: "*",
 } as const
 
