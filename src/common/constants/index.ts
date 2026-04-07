@@ -1,1 +1,1 @@
-export { AUTH_TOKEN } from "./contstants.ts"
+export * from "./constants"
