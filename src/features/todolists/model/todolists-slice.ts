@@ -3,8 +3,8 @@ import { clearDataAC } from "@/common/actions"
 import { ResultCode } from "@/common/enums"
 import type { RequestStatus } from "@/common/types"
 import { createAppSlice, handleServerAppError, handleServerNetworkError } from "@/common/utils"
-import { todolistsApi } from "@/features/todolists/api/todolistsApi"
 import { type Todolist, todolistSchema } from "@/features/todolists/api/todolistsApi.types"
+import { todolistsApi } from "@/features/todolists/api/todolistsApi.ts"
 
 export const todolistsSlice = createAppSlice({
   name: "todolists",
