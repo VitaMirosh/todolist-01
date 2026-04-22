@@ -37,10 +37,12 @@ export const tasksApi = baseApi.injectEndpoints({
         method: "delete",
         url: `/todo-lists/${todolistId}/tasks/${taskId}`,
       }),
+      invalidatesTags: ["Task"],
     }),
   }),
 })
 
+export const { useGetTasksQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteTaskMutation } = tasksApi
 export const _tasksApi = {
   getTasks(todolistId: string) {
     return instance.get<GetTasksResponse>(`/todo-lists/${todolistId}/tasks`)
