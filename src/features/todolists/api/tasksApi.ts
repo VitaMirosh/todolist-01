@@ -1,48 +1,45 @@
+import { baseApi } from "@/app/baseApi"
 import { instance } from "@/common/instance"
 import type { BaseResponse } from "@/common/types"
 import type { DomainTask, GetTasksResponse, UpdateTaskModel } from "./tasksApi.types"
-import { baseApi } from "@/app/baseApi.ts"
 
 export const tasksApi = baseApi.injectEndpoints({
-  endpoints: (builder) => ({
-    getTasks: builder.query<GetTasksResponse, string>({
-      query: (todolistId) => `/todo-lists/${todolistId}/tasks`,
+  endpoints: (build) => ({
+    getTasks: build.query<GetTasksResponse, string>({
+      query: (todolistId) => `todo-lists/${todolistId}/tasks`,
       providesTags: ["Task"],
     }),
-    createTask: builder.mutation<BaseResponse<{ item: DomainTask }>, { todolistId: string; title: string }>({
+    addTask: build.mutation<BaseResponse<{ item: DomainTask }>, { todolistId: string; title: string }>({
       query: ({ todolistId, title }) => ({
-        method: "post",
-        url: `/todo-lists/${todolistId}/tasks`,
+        url: `todo-lists/${todolistId}/tasks`,
+        method: "POST",
         body: { title },
       }),
       invalidatesTags: ["Task"],
     }),
-    updateTask: builder.mutation<
-      BaseResponse<{ item: DomainTask }>,
-      {
-        todolistId: string
-        taskId: string
-        model: UpdateTaskModel
-      }
-    >({
-      query: ({ todolistId, taskId, model }) => ({
-        method: "put",
-        url: `/todo-lists/${todolistId}/tasks/${taskId}`,
-        body: model,
+    removeTask: build.mutation<BaseResponse, { todolistId: string; taskId: string }>({
+      query: ({ todolistId, taskId }) => ({
+        url: `todo-lists/${todolistId}/tasks/${taskId}`,
+        method: "DELETE",
       }),
       invalidatesTags: ["Task"],
     }),
-    deleteTask: builder.mutation<BaseResponse, { todolistId: string; taskId: string }>({
-      query: ({ todolistId, taskId }) => ({
-        method: "delete",
-        url: `/todo-lists/${todolistId}/tasks/${taskId}`,
+    updateTask: build.mutation<
+      BaseResponse<{ item: DomainTask }>,
+      { todolistId: string; taskId: string; model: UpdateTaskModel }
+    >({
+      query: ({ todolistId, taskId, model }) => ({
+        url: `todo-lists/${todolistId}/tasks/${taskId}`,
+        method: "PUT",
+        body: model,
       }),
       invalidatesTags: ["Task"],
     }),
   }),
 })
 
-export const { useGetTasksQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteTaskMutation } = tasksApi
+export const { useGetTasksQuery, useAddTaskMutation, useRemoveTaskMutation, useUpdateTaskMutation } = tasksApi
+
 export const _tasksApi = {
   getTasks(todolistId: string) {
     return instance.get<GetTasksResponse>(`/todo-lists/${todolistId}/tasks`)

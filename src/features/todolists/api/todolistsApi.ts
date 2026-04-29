@@ -1,51 +1,48 @@
+import { baseApi } from "@/app/baseApi"
 import { instance } from "@/common/instance"
 import type { BaseResponse } from "@/common/types"
+import type { DomainTodolist } from "@/features/todolists/model/todolists-slice"
 import type { Todolist } from "./todolistsApi.types"
-import { DomainTodolist } from "@/features/todolists/model/todolists-slice.ts"
-import { baseApi } from "@/app/baseApi.ts"
 
 export const todolistsApi = baseApi.injectEndpoints({
-  endpoints: (builder) => ({
-    getTodolists: builder.query<DomainTodolist[], void>({
-      query: () => "/todo-lists",
-      transformResponse: (todolists: Todolist[]) => {
-        return todolists.map((tl) => {
-          return { ...tl, filter: "all", entityStatus: "idle" }
-        })
-      },
+  endpoints: (build) => ({
+    getTodolists: build.query<DomainTodolist[], void>({
+      query: () => "todo-lists",
+      transformResponse: (todolists: Todolist[]): DomainTodolist[] =>
+        todolists.map((todolist) => ({ ...todolist, filter: "all", entityStatus: "idle" })),
       providesTags: ["Todolist"],
     }),
-    createTodolist: builder.mutation<BaseResponse<{ item: Todolist }>, string>({
+    addTodolist: build.mutation<BaseResponse<{ item: Todolist }>, string>({
       query: (title) => ({
-        method: "post",
-        url: "/todo-lists",
+        url: "todo-lists",
+        method: "POST",
         body: { title },
       }),
       invalidatesTags: ["Todolist"],
     }),
-    changeTodolistTitle: builder.mutation<BaseResponse, { id: string; title: string }>({
-      query: ({ id, title }) => ({
-        method: "put",
-        url: `/todo-lists/${id}`,
-        body: { title },
-      }),
-      invalidatesTags: ["Todolist"],
-    }),
-    deleteTodolist: builder.mutation<BaseResponse, string>({
+    removeTodolist: build.mutation<BaseResponse, string>({
       query: (id) => ({
-        method: "delete",
-        url: `/todo-lists/${id}`,
+        url: `todo-lists/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Todolist"],
+    }),
+    updateTodolistTitle: build.mutation<BaseResponse, { id: string; title: string }>({
+      query: ({ id, title }) => ({
+        url: `todo-lists/${id}`,
+        method: "PUT",
+        body: { title },
       }),
       invalidatesTags: ["Todolist"],
     }),
   }),
 })
+
 export const {
   useGetTodolistsQuery,
-  useCreateTodolistMutation,
-
-  useChangeTodolistTitleMutation,
-  useDeleteTodolistMutation,
+  useAddTodolistMutation,
+  useRemoveTodolistMutation,
+  useUpdateTodolistTitleMutation,
 } = todolistsApi
 
 export const _todolistsApi = {
