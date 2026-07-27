@@ -50,6 +50,9 @@ importers:
       react-router:
         specifier: ^7.13.1
         version: 7.13.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      redux-thunk:
+        specifier: ^3.1.0
+        version: 3.1.0(redux@5.0.1)
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -63,6 +66,9 @@ importers:
       '@types/react-dom':
         specifier: 19.0.2
         version: 19.0.2(@types/react@19.0.2)
+      '@types/redux-thunk':
+        specifier: ^2.1.0
+        version: 2.1.0(redux@5.0.1)
       '@vitejs/plugin-react-swc':
         specifier: 3.7.2
         version: 3.7.2(vite@6.0.6(@types/node@25.2.3))
@@ -833,6 +839,10 @@ packages:
 
   '@types/react@19.0.2':
     resolution: {integrity: sha512-USU8ZI/xyKJwFTpjSVIrSeHBVAGagkHQKPNbxeWwql/vDmnTIBgx+TJnhFnj1NXgz8XfprU0egV2dROLGpsBEg==}
+
+  '@types/redux-thunk@2.1.0':
+    resolution: {integrity: sha512-8M+kcrnZQYO3A40d8a1lieBFur/ab8EXHqa2dGMQqsmBaVCbNp3gd8ed/HuSjLoLA63ov/trXaXWlkiKVF4VUw==}
+    deprecated: This is a stub types definition for Redux Thunk (https://github.com/gaearon/redux-thunk). Redux Thunk provides its own type definitions, so you don't need @types/redux-thunk installed!
 
   '@types/use-sync-external-store@0.0.6':
     resolution: {integrity: sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==}
@@ -2004,6 +2014,12 @@ snapshots:
   '@types/react@19.0.2':
     dependencies:
       csstype: 3.2.3
+
+  '@types/redux-thunk@2.1.0(redux@5.0.1)':
+    dependencies:
+      redux-thunk: 3.1.0(redux@5.0.1)
+    transitivePeerDependencies:
+      - redux
 
   '@types/use-sync-external-store@0.0.6': {}
 
